@@ -32,7 +32,7 @@
               icon="i-heroicons-arrow-right"
               trailing
             >
-              Create Your Tree
+              Create a Tree
             </UButton>
             <UButton 
               to="#explore" 
@@ -113,7 +113,7 @@
                   v-if="tree.logoUrl" 
                   :src="tree.logoUrl" 
                   :alt="`${tree.name} logo`" 
-                  class="h-16 w-16 object-cover rounded-full border-2 border-gray-200 dark:border-gray-700"
+                  class="h-16 w-16 object-cover rounded-full "
                 >
                 <div 
                   v-else 
