@@ -34,7 +34,6 @@ const db = getFirestore(app);
 
 export default function useFirebaseServer() {
   return {
-    db,
-    getAuth
+    db
   };
 }

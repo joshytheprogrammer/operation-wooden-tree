@@ -94,26 +94,32 @@ onMounted(async () => {
     // Make API call
     statusMessage.value = 'Connecting you...'
     
-    // Call the API
-    const { data, error: apiError } = await useFetch(`/api/go/${treeId}/${linkId}`)
+    // Call the API - $fetch returns the response directly, not with data/error properties
+    const response = await $fetch('/api/go/', {
+      method: 'POST',
+      body: {
+        treeId,
+        linkId
+      }
+    })
     
-    if (apiError.value) {
-      throw new Error(apiError.value.message || 'Failed to process redirect')
+    if (response.error) {
+      throw new Error(response.error || 'Failed to process redirect')
     }
     
-    if (!data.value || !data.value.url) {
-      throw new Error('Invalid destination URL')
+    if (!response.url) {
+      throw new Error('No destination URL provided')
     }
     
     // Store destination for preview
-    destination.value = data.value.url
+    destination.value = response.url
     
     // Update status
     statusMessage.value = 'Redirecting you now!'
     
     // Redirect after a brief delay to show the animation
     setTimeout(() => {
-      window.location.href = data.value.url
+      window.location.href = response.url
     }, 1500)
   } 
   catch (err) {
