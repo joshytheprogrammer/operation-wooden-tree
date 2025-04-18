@@ -93,29 +93,31 @@ const fetchLinks = async (treeId) => {
 // Fetch data on component mount
 onMounted(fetchTreeBySlug);
 </script>
+
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col bg-white dark:bg-gray-950">
+    
     <!-- Loading state -->
-    <div v-if="loading" class="flex-grow flex items-center justify-center p-4">
+    <div v-if="loading" class="flex-grow flex items-center justify-center p-6">
       <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
         <AppSpinner />
       </div>
     </div>
-    
+
     <!-- Error state -->
-    <div v-else-if="error" class="flex-grow flex items-center justify-center p-4">
-      <div class="max-w-md mx-auto text-center">
-        <UIcon name="i-heroicons-exclamation-triangle" class="h-16 w-16 text-amber-500 mx-auto" />
-        <h1 class="text-2xl font-bold mt-4 mb-2">Oops! Something went wrong</h1>
-        <p class="text-gray-600 dark:text-gray-300 mb-6">{{ error || "We couldn't find this tree." }}</p>
+    <div v-else-if="error" class="flex-grow flex items-center justify-center p-6">
+      <div class="max-w-md w-full text-center space-y-4">
+        <UIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-amber-500 mx-auto" />
+        <h1 class="text-2xl font-bold">Oops! Something went wrong</h1>
+        <p class="text-gray-600 dark:text-gray-300">{{ error || "We couldn't find this tree." }}</p>
         <UButton to="/" color="primary">Go Home</UButton>
       </div>
     </div>
 
+    <!-- Content -->
     <div 
       v-else
-      class="min-h-screen flex flex-col justify-center"
+      class="min-h-screen flex flex-col items-center "
       :style="{
         backgroundColor: tree?.styles?.backgroundColor || '#ffffff',
         color: tree?.styles?.textColor || '#000000',
@@ -123,32 +125,29 @@ onMounted(fetchTreeBySlug);
         backgroundImage: `linear-gradient(180deg, ${tree?.styles?.backgroundColor || '#ffffff'}dd 0%, ${tree?.styles?.backgroundColor || '#ffffff'} 100%)`
       }"
     >
-      <!-- Decorative elements -->
-      <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="fixed -top-24 -right-24 w-96 h-96 rounded-full opacity-10"
+
+      <!-- Decorative background elements -->
+      <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-10"
           :style="{ backgroundColor: tree?.styles?.buttonBackgroundColor || '#4f46e5' }"></div>
-        <div class="fixed -bottom-24 -left-24 w-64 h-64 rounded-full opacity-10"
+        <div class="absolute -bottom-24 -left-24 w-64 h-64 rounded-full opacity-10"
           :style="{ backgroundColor: tree?.styles?.buttonBackgroundColor || '#4f46e5' }"></div>
       </div>
 
-      <!-- Tree header -->
-      <header class="w-full max-w-md mx-auto mt-8 pb-8 px-4">
+      <!-- Tree Header -->
+      <header class="w-full max-w-md px-6 pt-16 pb-8 text-center">
         <div class="flex flex-col items-center">
           <div class="mb-6">
             <img 
-              v-if="tree?.logoUrl" 
-              :src="tree.logoUrl" 
-              :alt="`${tree.name} logo`" 
-              class="object-cover rounded-full shadow-xl border-4 -mt-28 transition-all duration-300 hover:scale-105"
-              width="96"
-              height="96"
-              :style="{
-                borderColor: tree?.styles?.buttonBackgroundColor || '#4f46e5',
-              }"
-            >
+              v-if="tree?.logoUrl"
+              :src="tree.logoUrl"
+              :alt="`${tree.name} logo`"
+              class="rounded-full shadow-xl border-4 transition-transform duration-300 hover:scale-105 w-24 h-24 object-cover"
+              :style="{ borderColor: tree?.styles?.buttonBackgroundColor || '#4f46e5' }"
+            />
             <div 
               v-else 
-              class="h-28 w-28 rounded-full flex items-center justify-center shadow-xl -mt-28 transition-all duration-300 hover:scale-105"
+              class="w-28 h-28 rounded-full flex items-center justify-center shadow-xl -mt-28 transition-transform duration-300 hover:scale-105"
               :style="{
                 backgroundColor: tree?.styles?.buttonBackgroundColor || '#4f46e5',
                 color: tree?.styles?.buttonTextColor || '#ffffff'
@@ -158,72 +157,61 @@ onMounted(fetchTreeBySlug);
             </div>
           </div>
 
-          <!-- Tree name and details -->
-          <h1 class="text-3xl font-extrabold text-center mb-2 tracking-tight">
-            {{ tree?.name }}
-          </h1>
-          <p v-if="slug" class="text-lg opacity-70 mb-2 text-center">@{{ slug }}</p>
-          
-          <!-- Divider -->
-          <div class="w-24 h-1 rounded-full my-6"
-            :style="{ backgroundColor: tree?.styles?.buttonBackgroundColor || '#4f46e5', opacity: 0.6 }">
-          </div>
+          <h1 class="text-3xl font-extrabold mb-2">{{ tree?.name }}</h1>
+          <p v-if="slug" class="text-lg opacity-70 mb-2">@{{ slug }}</p>
+
+          <div class="w-24 h-1 rounded-full my-4"
+            :style="{ backgroundColor: tree?.styles?.buttonBackgroundColor || '#4f46e5', opacity: 0.6 }"
+          />
         </div>
       </header>
 
-      <!-- Links container -->
-      <main class="w-full max-w-md mx-auto px-6 pb-16 flex-grow">
-        <!-- Empty state -->
+      <!-- Links -->
+      <main class="w-full max-w-md px-6 pb-16 flex-grow">
+        <!-- Empty State -->
         <div 
           v-if="visibleLinks.length === 0" 
-          class="text-center py-12 px-4 rounded-2xl bg-opacity-50 backdrop-filter backdrop-blur-sm"
+          class="text-center py-12 px-4 rounded-2xl backdrop-blur-sm bg-opacity-50"
           :style="{ backgroundColor: tree?.styles?.buttonBackgroundColor || '#4f46e5', color: tree?.styles?.buttonTextColor || '#ffffff' }"
         >
-          <UIcon name="i-heroicons-link-slash" class="h-12 w-12 mx-auto mb-4 opacity-80" />
+          <UIcon name="i-heroicons-link-slash" class="w-12 h-12 mx-auto mb-4 opacity-80" />
           <p class="text-lg font-medium">No links available yet</p>
-          <p class="opacity-80 mt-2">Check back soon!</p>
+          <p class="opacity-80 mt-1">Check back soon!</p>
         </div>
 
-        <!-- Links -->
-        <TransitionGroup 
-          name="links-list"
-          tag="div"
-          class="space-y-4"
-        >
+        <!-- Link Cards -->
+        <TransitionGroup name="links-list" tag="div" class="space-y-4 mt-4">
           <div
-            v-for="link in visibleLinks" 
+            v-for="link in visibleLinks"
             :key="link.id"
-            class="group transition-all duration-300 hover:-translate-y-1"
+            class="relative group transition-transform duration-300 hover:-translate-y-1"
           >
-          
-            <!-- Pinned indicator -->
+            <!-- Pinned icon -->
             <div 
               v-if="link.pinned"
-              class="absolute -right-2 -top-2 bg-white rounded-full w-4 h-4 flex items-center justify-center shadow-md z-10"
-              
+              class="absolute -right-2 -top-2 bg-white rounded-full w-4 h-4 flex items-center justify-center shadow z-10"
               :style="{ color: tree?.styles?.buttonBackgroundColor || '#4f46e5' }"
             >
               <UIcon name="ic:round-push-pin" class="w-3 h-3" />
             </div>
-            
-            <!-- URL Link -->
+
+            <!-- Button -->
             <UButton 
               v-if="link.type === 'url'"
-              :to="`/go/${tree.id}/${link.id}`"
+              :to="`/go?treeId=${tree.id}&linkId=${link.id}`"
               size="xl"
               block
-              class="group-hover:shadow-lg transition-all duration-300 ease-out rounded-xl border overflow-hidden clear-both"
+              class="rounded-xl border transition-all duration-300 group-hover:shadow-lg"
               :style="{
                 backgroundColor: tree?.styles?.buttonBackgroundColor || '#4f46e5',
                 color: tree?.styles?.buttonTextColor || '#ffffff',
                 borderColor: `${tree?.styles?.buttonBackgroundColor || '#4f46e5'}60`,
               }"
-              target="_blank"
               rel="noopener noreferrer"
             >
-              <div class="w-full px-1 py-1 flex items-center justify-between">
+              <div class="flex items-center justify-between w-full px-1 py-1">
                 <div class="flex items-center gap-2">
-                  <UIcon name="i-heroicons-link" class="w-5 h-5 mr-3 opacity-80" />
+                  <UIcon name="i-heroicons-link" class="w-5 h-5 opacity-80" />
                   <span class="font-semibold text-base">{{ link.title }}</span>
                 </div>
                 <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 opacity-60 transition-transform group-hover:translate-x-1" />
@@ -236,19 +224,19 @@ onMounted(fetchTreeBySlug);
               :to="`mailto:${link.value}`"
               size="xl"
               block
-              class="group-hover:shadow-lg transition-all duration-300 ease-out rounded-xl border overflow-hidden clear-both"
+              class="rounded-xl border transition-all duration-300 group-hover:shadow-lg"
               :style="{
                 backgroundColor: tree?.styles?.buttonBackgroundColor || '#4f46e5',
                 color: tree?.styles?.buttonTextColor || '#ffffff',
                 borderColor: `${tree?.styles?.buttonBackgroundColor || '#4f46e5'}60`,
               }"
             >
-              <div class="w-full px-1 py-1 flex items-center justify-between">
+              <div class="flex items-center justify-between w-full px-1 py-1">
                 <div class="flex items-center gap-2">
-                  <UIcon name="i-heroicons-envelope" class="w-5 h-5 mr-3 opacity-80" />
+                  <UIcon name="i-heroicons-envelope" class="w-5 h-5 opacity-80" />
                   <span class="font-semibold text-base">{{ link.title }}</span>
                 </div>
-                <UIcon name="i-heroicons-envelope-open" class="w-4 h-4 opacity-60 transition-all group-hover:scale-110" />
+                <UIcon name="i-heroicons-envelope-open" class="w-4 h-4 opacity-60 transition-transform group-hover:scale-110" />
               </div>
             </UButton>
 
@@ -258,37 +246,35 @@ onMounted(fetchTreeBySlug);
               :to="`tel:${link.value}`"
               size="xl"
               block
-              class="group-hover:shadow-lg transition-all duration-300 ease-out rounded-xl border overflow-hidden clear-both"
+              class="rounded-xl border transition-all duration-300 group-hover:shadow-lg"
               :style="{
                 backgroundColor: tree?.styles?.buttonBackgroundColor || '#4f46e5',
                 color: tree?.styles?.buttonTextColor || '#ffffff',
                 borderColor: `${tree?.styles?.buttonBackgroundColor || '#4f46e5'}60`,
               }"
             >
-              <div class="w-full px-1 py-1 flex items-center justify-between">
+              <div class="flex items-center justify-between w-full px-1 py-1">
                 <div class="flex items-center gap-2">
-                  <UIcon name="i-heroicons-phone" class="w-5 h-5 mr-3 opacity-80" />
+                  <UIcon name="i-heroicons-phone" class="w-5 h-5 opacity-80" />
                   <span class="font-semibold text-base">{{ link.title }}</span>
                 </div>
-                <UIcon name="i-heroicons-device-phone-mobile" class="w-4 h-4 opacity-60 transition-all group-hover:scale-110" />
+                <UIcon name="i-heroicons-device-phone-mobile" class="w-4 h-4 opacity-60 transition-transform group-hover:scale-110" />
               </div>
             </UButton>
           </div>
         </TransitionGroup>
       </main>
 
-      <!-- Footer with subtle branding -->
-      <footer class="w-full py-6 px-4 text-center">
-        <div class="max-w-md mx-auto flex items-center justify-center gap-2">
-          <p class="text-sm opacity-60">
-            Made with 
-            <UIcon name="i-heroicons-heart" class="w-4 h-4 inline-block mx-0.5" :style="{ color: tree?.styles?.buttonBackgroundColor || '#4f46e5' }" /> 
-            on
-          </p>
+      <!-- Footer -->
+      <footer class="w-full px-6 py-6 text-center text-sm opacity-60">
+        <div class="flex items-center justify-center gap-1">
+          <span>Made with</span>
+          <UIcon name="i-heroicons-heart" class="w-4 h-4" :style="{ color: tree?.styles?.buttonBackgroundColor || '#4f46e5' }" />
+          <span>on</span>
           <UButton 
             to="/" 
             variant="link" 
-            class="text-sm font-medium"
+            class="font-medium"
             :style="{ color: tree?.styles?.buttonBackgroundColor || '#4f46e5' }"
           >
             Operation Wooden Tree
@@ -299,4 +285,14 @@ onMounted(fetchTreeBySlug);
   </div>
 </template>
 
-<style> .links-list-enter-active, .links-list-leave-active { transition: all 0.3s ease; } .links-list-enter-from, .links-list-leave-to { opacity: 0; transform: translateX(30px); } </style>
+<style>
+.links-list-enter-active,
+.links-list-leave-active {
+  transition: all 0.3s ease;
+}
+.links-list-enter-from,
+.links-list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+</style>

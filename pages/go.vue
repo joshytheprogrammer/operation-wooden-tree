@@ -1,0 +1,134 @@
+<template>
+  <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 p-4">
+    <!-- Main Content Card -->
+    <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden transition-all duration-500">
+      <!-- Logo Section -->
+      <div class="p-6 bg-primary-500 dark:bg-primary-600 flex justify-center">
+        <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg">
+          <UIcon name="i-heroicons-link" class="w-8 h-8 text-primary-500" />
+        </div>
+      </div>
+      
+      <!-- Status Section -->
+      <div class="p-6 text-center">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+          {{ statusMessage }}
+        </h2>
+        
+        <p v-if="!error" class="text-gray-500 dark:text-gray-400 mt-2">
+          You'll be redirected in a moment...
+        </p>
+        
+        <p v-if="error" class="text-red-500 dark:text-red-400 mt-2">
+          {{ error }}
+        </p>
+        
+        <!-- Loading Animation -->
+        <div v-if="loading" class="mt-6 mb-4">
+          <div class="flex justify-center">
+            <div class="relative w-16 h-16">
+              <div class="absolute top-0 w-full h-full rounded-full border-4 border-primary-200 dark:border-primary-900"></div>
+              <div class="absolute top-0 w-full h-full rounded-full border-4 border-t-primary-500 animate-spin"></div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
+            Processing your request...
+          </p>
+        </div>
+        
+        <!-- Error Actions -->
+        <div v-if="error" class="mt-6">
+          <UButton 
+            color="primary"
+            block
+            @click="goBack"
+          >
+            Go back
+          </UButton>
+        </div>
+        
+        <!-- Destination Preview (when available) -->
+        <div v-if="destination && !error" class="mt-6 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-left">
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            Destination:
+          </p>
+          <p class="text-gray-800 dark:text-gray-200 truncate">
+            {{ destination }}
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">
+      Powered by Operation Wooden Tree
+    </p>
+  </div>
+</template>
+
+<script setup>
+const route = useRoute()
+const router = useRouter()
+
+// State
+const loading = ref(true)
+const error = ref(null)
+const destination = ref(null)
+const statusMessage = ref('Preparing your redirect...')
+
+// Get parameters
+const treeId = route.query.treeId
+const linkId = route.query.linkId
+
+// Process redirect
+onMounted(async () => {
+  // Validate parameters
+  if (!treeId || !linkId) {
+    error.value = 'Missing parameters for redirect'
+    loading.value = false
+    statusMessage.value = 'Redirect failed'
+    return
+  }
+
+  try {
+    // Make API call
+    statusMessage.value = 'Connecting you...'
+    
+    // Call the API
+    const { data, error: apiError } = await useFetch(`/api/go/${treeId}/${linkId}`)
+    
+    if (apiError.value) {
+      throw new Error(apiError.value.message || 'Failed to process redirect')
+    }
+    
+    if (!data.value || !data.value.url) {
+      throw new Error('Invalid destination URL')
+    }
+    
+    // Store destination for preview
+    destination.value = data.value.url
+    
+    // Update status
+    statusMessage.value = 'Redirecting you now!'
+    
+    // Redirect after a brief delay to show the animation
+    setTimeout(() => {
+      window.location.href = data.value.url
+    }, 1500)
+  } 
+  catch (err) {
+    error.value = err.message || 'Failed to redirect'
+    statusMessage.value = 'Redirect failed'
+    loading.value = false
+  }
+})
+
+// Go back function
+function goBack() {
+  router.back()
+}
+</script>
+
+<style scoped>
+/* You can add any additional custom styles here */
+</style>
