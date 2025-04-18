@@ -23,7 +23,6 @@ const tabs = [
   }
 ];
 
-const isUploadModalOpen = ref(false);
 </script>
 
 <template>
@@ -91,8 +90,6 @@ const isUploadModalOpen = ref(false);
               <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 We're working on bringing you detailed analytics for your tree.
               </p>
-              <button @click="isUploadModalOpen = !isUploadModalOpen">Click to upload</button>
-              <AppUpload v-model="isUploadModalOpen" @uploaded="console.log($event)" />
             </div>
           </UCard>
         </template>

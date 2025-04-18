@@ -6,6 +6,19 @@
       <AppColorMode />
     </div>
     <NuxtPage />
+    <AppUpload v-model="isUploadModalOpen" @uploaded="uploaded($event)" />
     <UNotifications />
   </div>
 </template>
+
+<script setup>
+import { useClipboard } from '@vueuse/core'
+
+const { copy } = useClipboard({ source: 'copy me' })
+const isUploadModalOpen = useState('isUploadModalOpen', () => false);
+
+function uploaded(e) {
+  copy(e)
+  isUploadModalOpen.value = false
+}
+</script>

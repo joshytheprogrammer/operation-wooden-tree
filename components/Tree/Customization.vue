@@ -7,6 +7,7 @@ const props = defineProps({
 })
 
 const { tree, loading, error, updateTree } = useTree(props.treeId)
+const isUploadModalOpen = useState('isUploadModalOpen')
 
 const handleSubmit = async () => {
   await updateTree(tree.value)
@@ -59,7 +60,9 @@ const handleSubmit = async () => {
 
         <UFormGroup label="Logo URL" name="logoUrl">
           <UInput v-model="tree.logoUrl" placeholder="https://example.com/logo.png" />
-          <!-- TODO: Implement file upload -->
+          <div class="w-full flex justify-end">
+            <UButton class="my-2" @click="isUploadModalOpen = !isUploadModalOpen">Click to upload</UButton>
+          </div>
         </UFormGroup>
       </div>
 
