@@ -8,7 +8,8 @@
           <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Operation Wooden Tree</h1>
         </div>
         <div class="flex space-x-4">
-          <UButton to="/a/login" variant="ghost">Sign In</UButton>
+          <UButton v-if="!user" to="/a/login" variant="ghost">Sign In</UButton>
+          <UButton v-else to="/a/" variant="ghost">Dashboard</UButton>
           <UButton to="/a/t/new" color="primary">Create</UButton>
         </div>
       </div>
@@ -190,6 +191,8 @@ import { useTrees } from '~/composables/useTrees'
 
 // Fetch trees data
 const { trees, loading, error } = useTrees()
+
+const user = useCurrentUser();
 
 // Define page metadata
 useHead({
