@@ -92,6 +92,9 @@ const handleSubmit = async () => {
             <USelect
               v-model="tree.styles.fontFamily"
               :options="[
+                { value: 'Poppins', label: 'Poppins' },
+                { value: 'Inter', label: 'Inter' },
+                { value: 'Montserrat', label: 'Montserrat' },
                 { value: 'sans-serif', label: 'Sans-serif' },
                 { value: 'serif', label: 'Serif' },
                 { value: 'monospace', label: 'Monospace' }
