@@ -1,4 +1,4 @@
-import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from 'firebase/firestore'
+import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot,writeBatch } from 'firebase/firestore'
 import { useFirestore } from 'vuefire'
 
 export const useTreeLinks = (treeId) => {
@@ -96,16 +96,16 @@ export const useTreeLinks = (treeId) => {
   }
 
   // Reorder links
-  const reorderLinks = async (newOrder) => {
+  const reorderLinks = async (updatedLinks) => {
     try {
       loading.value = true
       error.value = null
       
       const batch = writeBatch(db)
       
-      newOrder.forEach((linkId, index) => {
-        const linkRef = doc(db, 'trees', treeId, 'links', linkId)
-        batch.update(linkRef, { order: index })
+      updatedLinks.forEach(link => {
+        const linkRef = doc(db, 'trees', treeId, 'links', link.id)
+        batch.update(linkRef, { order: link.order })
       })
       
       await batch.commit()
@@ -117,6 +117,7 @@ export const useTreeLinks = (treeId) => {
       loading.value = false
     }
   }
+
 
   // Initialize
   onMounted(fetchLinks)

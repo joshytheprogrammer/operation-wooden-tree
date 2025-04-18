@@ -1,5 +1,6 @@
 <script setup>
-import { useDraggable } from '@vueuse/core'
+import { useDraggable, useVModel } from '@vueuse/core'
+import { useTemplateRef } from 'vue'
 
 const props = defineProps({
   treeId: {
@@ -42,14 +43,60 @@ const handleDeleteLink = async () => {
   }
 }
 
-// Draggable functionality
-const linksContainer = ref(null)
+// Add these new state variables
+const draggedLink = ref(null)
+const dragOverLink = ref(null)
+const isDragging = ref(false)
+const linksContainer = useTemplateRef('linksContainer')
+
 const { style: containerStyle } = useDraggable(linksContainer, {
   preventDefault: true,
-  onMove({ deltaX, deltaY }) {
-    // We'll implement reordering logic here
+})
+
+// New handler functions for drag and drop
+const handleDragStart = (link) => {
+  draggedLink.value = link
+  isDragging.value = true
+}
+
+const handleDragOver = (e, link) => {
+  e.preventDefault()
+  if (draggedLink.value && draggedLink.value.id !== link.id) {
+    dragOverLink.value = link
   }
-});
+}
+
+const handleDragEnd = async () => {
+  isDragging.value = false
+  
+  if (draggedLink.value && dragOverLink.value) {
+    // Get current links array
+    const currentLinks = [...links.value]
+    
+    // Find indices of dragged and target links
+    const draggedIndex = currentLinks.findIndex(l => l.id === draggedLink.value.id)
+    const targetIndex = currentLinks.findIndex(l => l.id === dragOverLink.value.id)
+    
+    // Reorder array
+    const [removed] = currentLinks.splice(draggedIndex, 1)
+    currentLinks.splice(targetIndex, 0, removed)
+    
+    // Update order property based on new positions
+    const updatedLinks = currentLinks.map((link, index) => ({
+      ...link,
+      order: index
+    }))
+
+    console.log(updatedLinks)
+    
+    // Update Firestore with new order
+    await reorderLinks(updatedLinks)
+  }
+  
+  // Reset drag state
+  draggedLink.value = null
+  dragOverLink.value = null
+};
 </script>
 
 <template>
@@ -85,15 +132,24 @@ const { style: containerStyle } = useDraggable(linksContainer, {
       </div>
 
       <div
-        ref="linksContainer"
         class="space-y-3"
         :style="containerStyle"
       >
-        <div
-          v-for="link in links"
-          :key="link.id"
-          class="group relative p-4 border rounded-lg hover:shadow-md transition-all"
-        >
+      <div
+        v-for="link in links"
+        :key="link.id"
+        ref="linksContainer"
+        class="group relative p-4 border rounded-lg hover:shadow-md transition-all"
+        :class="{
+          'ring-2 ring-primary-500': draggedLink?.id === link.id,
+          'bg-gray-50 dark:bg-gray-800': dragOverLink?.id === link.id
+        }"
+        draggable="true"
+        @dragstart="handleDragStart(link)"
+        @dragover="handleDragOver($event, link)"
+        @dragend="handleDragEnd"
+        @dragleave="dragOverLink = null"
+      >
           <div class="flex items-start justify-between">
             <div>
               <div class="flex items-center">
