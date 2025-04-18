@@ -9,6 +9,7 @@ const props = defineProps({
 })
 
 const { links, error, loading, addLink, updateLink, deleteLink, reorderLinks } = useTreeLinks(props.treeId)
+const toast = useToast()
 
 const newLink = ref({
   title: '',
@@ -85,13 +86,18 @@ const handleDragEnd = async () => {
       ...link,
       order: index
     }))
-
-    console.log(updatedLinks)
     
     // Update Firestore with new order
     await reorderLinks(updatedLinks)
+
   }
-  
+
+  toast.add({
+    title: 'Links reordered successfully',
+    variant: 'success',
+    icon: 'i-heroicons-check-circle'
+  })
+
   // Reset drag state
   draggedLink.value = null
   dragOverLink.value = null
