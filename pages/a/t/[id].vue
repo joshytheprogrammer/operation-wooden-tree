@@ -81,8 +81,8 @@ const tabs = [
                 {{ item.description }}
               </p>
             </template>
-            
-            <div class="text-center py-12">
+              <TreeAnalytics :tree-id="treeId" />
+            <!-- <div class="text-center py-12">
               <UIcon name="i-heroicons-chart-bar" class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
               <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
                 Analytics Coming Soon
@@ -90,7 +90,7 @@ const tabs = [
               <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 We're working on bringing you detailed analytics for your tree.
               </p>
-            </div>
+            </div> -->
           </UCard>
         </template>
       </UTabs>

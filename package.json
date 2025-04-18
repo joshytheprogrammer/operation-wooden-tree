@@ -16,6 +16,7 @@
     "@nuxt/ui": "2",
     "@nuxtjs/color-mode": "3.5.2",
     "@nuxtjs/tailwindcss": "6.13.2",
+    "apexcharts": "3.46.0",
     "autoprefixer": "^10.4.21",
     "firebase": "^11.6.0",
     "firebase-admin": "^13.2.0",
