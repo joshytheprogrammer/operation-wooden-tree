@@ -1,6 +1,13 @@
 <!-- ~/components/charts/ChartsBar.vue -->
 <template>
-  <div :id="chartId" class="h-full w-full"></div>
+  <ClientOnly>
+    <div :id="chartId" class="h-full w-full"></div>
+    <template #fallback>
+      <div class="h-full w-full flex items-center justify-center">
+        <p class="text-gray-500">Loading chart...</p>
+      </div>
+    </template>
+  </ClientOnly>
 </template>
 
 <script setup>
@@ -29,12 +36,14 @@ const props = defineProps({
 const chartId = ref(`bar-chart-${Math.random().toString(36).substring(2, 9)}`)
 let chart = null
 
-const createChart = () => {
+const createChart = async () => {
   if (chart) {
     chart.destroy()
   }
   
   if (!document.getElementById(chartId.value)) return
+
+  const ApexCharts = (await import('apexcharts')).default
   
   const options = {
     series: [{
@@ -107,10 +116,8 @@ const createChart = () => {
     }
   }
 
-  if (typeof ApexCharts !== 'undefined') {
-    chart = new ApexCharts(document.getElementById(chartId.value), options)
-    chart.render()
-  }
+  chart = new ApexCharts(document.getElementById(chartId.value), options)
+  chart.render()
 }
 
 onMounted(() => {

@@ -20,12 +20,14 @@ const props = defineProps({
 const chartId = ref(`line-chart-${Math.random().toString(36).substring(2, 9)}`)
 let chart = null
 
-const createChart = () => {
+const createChart = async () => {
   if (chart) {
     chart.destroy()
   }
   
   if (!document.getElementById(chartId.value) || !props.data.length) return
+
+  const ApexCharts = (await import('apexcharts')).default
   
   const dates = props.data.map(item => item.date)
   const counts = props.data.map(item => item.count)
@@ -106,10 +108,8 @@ const createChart = () => {
     }
   }
 
-  if (typeof ApexCharts !== 'undefined') {
-    chart = new ApexCharts(document.getElementById(chartId.value), options)
-    chart.render()
-  }
+  chart = new ApexCharts(document.getElementById(chartId.value), options)
+  chart.render()
 }
 
 onMounted(() => {

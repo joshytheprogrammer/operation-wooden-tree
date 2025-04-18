@@ -179,6 +179,7 @@
           />
         </div>
       </UCard>
+
     </template>
     
     <div v-else-if="!loading" class="text-center py-12">
