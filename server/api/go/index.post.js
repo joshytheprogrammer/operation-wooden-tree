@@ -22,6 +22,8 @@ export default defineEventHandler(async (event) => {
     const userAgent = headers['user-agent'] || '';
     const ipAddress = getRequestIP(event, { xForwardedFor: true }) || '0.0.0.0';
     const timestamp = Timestamp.now();
+
+    const isLocalIp = ['127.0.0.1', '::1', 'localhost', '0.0.0.0'].includes(ipAddress);
     
     // Parse user agent
     const parser = new UAParser(userAgent);
@@ -48,7 +50,6 @@ export default defineEventHandler(async (event) => {
       return { error: 'Invalid link destination', status: 400 };
     }
     
-    // Get location data from IP API
     let geoData = {
       country: 'Unknown',
       countryCode: 'XX',
@@ -61,30 +62,43 @@ export default defineEventHandler(async (event) => {
       org: '',
       as: ''
     };
-
+    
     try {
-      const response = await fetch(`http://ip-api.com/json/${ipAddress}?fields=61439`);
-      const data = await response.json();
-      
-      if (data.status === 'success') {
-        geoData = { 
-          ...geoData, 
-          country: data.country || geoData.country,
-          countryCode: data.countryCode || geoData.countryCode,
-          region: data.region || geoData.region,
-          regionName: data.regionName || geoData.regionName,
-          city: data.city || geoData.city,
-          zip: data.zip || geoData.zip,
-          timezone: data.timezone || geoData.timezone,
-          isp: data.isp || geoData.isp,
-          org: data.org || geoData.org,
-          as: data.as || geoData.as
-        };
+      // Only make the API call if not a local IP, otherwise use mock data
+      if (!isLocalIp) {
+        const response = await fetch(`http://ip-api.com/json/${ipAddress}?fields=61439`);
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+          geoData = { 
+            ...geoData, 
+            country: data.country || geoData.country,
+            countryCode: data.countryCode || geoData.countryCode,
+            // ... other fields as before
+          };
+        } else {
+          console.error('IP API failed:', data.message || 'Unknown error');
+        }
       } else {
-        console.error('IP API failed:', data.message || 'Unknown error');
+        // Use mock data for local development
+        geoData = {
+          country: 'Development',
+          countryCode: 'DEV',
+          region: 'Local',
+          regionName: 'Development Region',
+          city: 'localhost',
+          zip: '00000',
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          lat: 0,
+          lon: 0,
+          isp: 'Development ISP',
+          org: 'Development Organization',
+          as: 'AS0 Development'
+        };
+        console.log('Using mock geolocation data for development');
       }
     } catch (error) {
-      // console.error('Error fetching geo data:', error);
+      console.error('Error fetching geo data:', error);
     }
     
     // Generate or use provided fingerprint
