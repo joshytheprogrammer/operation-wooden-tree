@@ -47,7 +47,7 @@
           </UButton>
         </div>
         
-        <!-- Destination Preview (when available) -->
+        <!-- Destination Preview -->
         <div v-if="destination && !error" class="mt-6 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-left">
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
             Destination:
@@ -58,10 +58,14 @@
         </div>
       </div>
     </div>
-    
-    <!-- Footer -->
+        <!-- Footer -->
     <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">
       Powered by Operation Wooden Tree
+    </p>
+
+    <!-- Privacy Notice -->
+    <p class="mt-8 text-xs text-gray-500 dark:text-gray-400 text-center max-w-md">
+      This site uses analytics to improve user experience. By continuing, you consent to our use of cookies and tracking.
     </p>
   </div>
 </template>
@@ -75,10 +79,74 @@ const loading = ref(true)
 const error = ref(null)
 const destination = ref(null)
 const statusMessage = ref('Preparing your redirect...')
+const fingerprintData = ref(null)
 
 // Get parameters
 const treeId = route.query.treeId
 const linkId = route.query.linkId
+
+const generateFingerprint = async () => {
+  try {
+    // Load the FingerprintJS agent
+    const fp = await (await import('@fingerprintjs/fingerprintjs')).load();
+    const result = await fp.get();
+
+    // Remove only the specified problematic components
+    delete result.components.canvas;
+    delete result.components.webGlBasics; 
+    delete result.components.webGlExtensions;
+    delete result.components.math;
+
+    // Flatten arrays to comma-separated strings
+    const flattenArrays = (obj) => {
+      if (Array.isArray(obj)) {
+        return obj.flat().join(','); // Flatten nested arrays and join
+      }
+      return obj;
+    };
+
+    // Process components to flatten arrays
+    const processedComponents = {};
+    for (const [key, value] of Object.entries(result.components)) {
+      processedComponents[key] = {
+        ...value,
+        value: flattenArrays(value.value)
+      };
+    }
+
+    // Enhanced data with screen info
+    const enhancedData = {
+      visitorId: result.visitorId,
+      confidence: result.confidence,
+      version: result.version,
+      components: processedComponents,
+      screen: {
+        width: window.screen.width,
+        height: window.screen.height,
+        colorDepth: window.screen.colorDepth,
+        pixelRatio: window.devicePixelRatio
+      },
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      languages: navigator.languages.join(','),
+      platform: navigator.platform,
+      hardwareConcurrency: navigator.hardwareConcurrency || 0,
+      deviceMemory: navigator.deviceMemory || 0,
+      sessionStorage: !!window.sessionStorage,
+      localStorage: !!window.localStorage,
+      indexedDB: !!window.indexedDB,
+      touchSupport: 'ontouchstart' in window,
+      timestamp: new Date().toISOString()
+    };
+
+    return enhancedData;
+  } catch (err) {
+    console.error('Fingerprint generation failed:', err);
+    return {
+      error: 'fingerprint_failed',
+      timestamp: new Date().toISOString()
+    };
+  }
+};
 
 // Process redirect
 onMounted(async () => {
@@ -91,15 +159,24 @@ onMounted(async () => {
   }
 
   try {
+    // Generate fingerprint
+    statusMessage.value = 'Verifying your browser...'
+
+    try{
+      fingerprintData.value = await generateFingerprint();
+    } catch(e) {
+      console.log(e)
+    }
+    
     // Make API call
     statusMessage.value = 'Connecting you...'
     
-    // Call the API - $fetch returns the response directly, not with data/error properties
     const response = await $fetch('/api/go/', {
       method: 'POST',
       body: {
         treeId,
-        linkId
+        linkId,
+        fingerprintData: fingerprintData.value
       }
     })
     
@@ -134,7 +211,3 @@ function goBack() {
   router.back()
 }
 </script>
-
-<style scoped>
-/* You can add any additional custom styles here */
-</style>

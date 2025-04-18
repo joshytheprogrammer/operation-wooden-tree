@@ -208,6 +208,7 @@ onMounted(fetchTreeBySlug);
                 borderColor: `${tree?.styles?.buttonBackgroundColor || '#4f46e5'}60`,
               }"
               rel="noopener noreferrer"
+              target="_blank"
             >
               <div class="flex items-center justify-between w-full px-1 py-1">
                 <div class="flex items-center gap-2">
