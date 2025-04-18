@@ -3,9 +3,9 @@
     <!-- Navbar -->
     <header class="bg-white dark:bg-gray-800 shadow">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
+        <div class="flex justify-start md:justify-normal md:items-center gap-4">
           <AppLogo class="h-10 w-auto" />
-          <h1 class="hidden md:text-2xl font-bold text-gray-900 dark:text-white">Operation Wooden Tree</h1>
+          <h1 class="hidden md:block text-2xl font-bold text-gray-900 dark:text-white">Operation Wooden Tree</h1>
         </div>
         <div class="flex space-x-4">
           <UButton v-if="!user" to="/a/login" variant="ghost">Sign In</UButton>
@@ -19,7 +19,7 @@
     <section class="bg-gradient-to-b from-blue-50 to-white dark:from-gray-800 dark:to-gray-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <div class="text-center">
-          <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
+          <h1 class="text-2xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
             All Your Links in One Place
           </h1>
           <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
