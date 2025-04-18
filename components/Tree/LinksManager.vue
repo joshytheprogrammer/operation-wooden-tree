@@ -1,6 +1,5 @@
 <script setup>
-import { useDraggable, useVModel } from '@vueuse/core'
-import { useTemplateRef } from 'vue'
+import { useDraggable } from '@vueuse/core'
 
 const props = defineProps({
   treeId: {

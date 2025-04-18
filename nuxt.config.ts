@@ -7,6 +7,16 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'light'
   },
+  runtimeConfig: {
+    public: {
+      cloudinary: {
+        cloudName: 'dsgvwxygr',
+        apiKey: '521893998441623',
+        uploadPreset: '',
+        apiSecret: 'MNM1gJBl7fegqSs_S-Sd2bqa8cQ'
+      }
+    }
+  },
   vuefire: {
     auth: {
       enabled: true,

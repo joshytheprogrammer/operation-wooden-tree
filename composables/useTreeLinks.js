@@ -98,7 +98,7 @@ export const useTreeLinks = (treeId) => {
   // Reorder links
   const reorderLinks = async (updatedLinks) => {
     try {
-      loading.value = true
+      // loading.value = true
       error.value = null
       
       const batch = writeBatch(db)
