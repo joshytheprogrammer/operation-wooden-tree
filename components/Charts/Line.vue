@@ -13,7 +13,7 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: '#1A56DB'
+    default: '#eca414'
   }
 })
 
@@ -102,10 +102,15 @@ const createChart = async () => {
       }
     },
     tooltip: {
+      theme: 'dark',  // Forces dark theme for tooltips
+      style: {
+        fontSize: '12px',
+        fontFamily: 'Inter, sans-serif',
+      },
       x: {
         format: 'dd/MM/yy'
       }
-    }
+    },
   }
 
   chart = new ApexCharts(document.getElementById(chartId.value), options)

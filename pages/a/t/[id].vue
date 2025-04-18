@@ -75,7 +75,7 @@ const tabs = [
                 <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
                   {{ item.label }}
                 </h3>
-                <UBadge label="Soon" size="xs" />
+                <UBadge label="Beta" size="xs" />
               </div>
               <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 {{ item.description }}

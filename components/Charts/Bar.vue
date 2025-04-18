@@ -28,13 +28,14 @@ const props = defineProps({
   },
   colors: {
     type: Array,
-    default: () => ['#1C64F2', '#7E3AF2']
+    default: () => ["#16BDCA", "#9061F9", "#E74694", "#FACA15"]
   }
 })
 
 // Generate unique ID for each chart instance
 const chartId = ref(`bar-chart-${Math.random().toString(36).substring(2, 9)}`)
 let chart = null
+const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
 
 const createChart = async () => {
   if (chart) {
@@ -44,11 +45,10 @@ const createChart = async () => {
   if (!document.getElementById(chartId.value)) return
 
   const ApexCharts = (await import('apexcharts')).default
-  
   const options = {
     series: [{
       name: "Count",
-      color: props.colors[0],
+      color: props.colors[random(0, props.colors.length - 1)],
       data: props.values
     }],
     chart: {
@@ -99,6 +99,18 @@ const createChart = async () => {
         style: {
           fontFamily: "Inter, sans-serif",
           cssClass: 'text-xs font-normal fill-gray-500 dark:fill-gray-400'
+        }
+      }
+    },
+    tooltip: {
+      theme: 'dark',  // Forces dark theme for tooltips
+      style: {
+        fontSize: '12px',
+        fontFamily: 'Inter, sans-serif',
+      },
+      y: {
+        formatter: function (val) {
+          return val
         }
       }
     },
