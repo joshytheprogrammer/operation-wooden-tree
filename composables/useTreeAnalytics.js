@@ -65,10 +65,8 @@ export const useTreeAnalytics = (treeId) => {
     return {
       overview: {
         totalClicks: treeData.value?.totalClicks || 0,
-        uniqueVisitors: treeData.value?.uniqueVisitors || 0,
-        conversionRate: treeData.value?.totalClicks && treeData.value?.uniqueVisitors 
-          ? ((treeData.value.uniqueVisitors / treeData.value.totalClicks) * 100).toFixed(2) + '%'
-          : '0%'
+        uniqueClicks: treeData.value?.uniqueClicks || 0,
+        conversionRate: treeData.value?.uniqueClicks && treeData.value?.uniqueClicks > 0 ? ((treeData.value.uniqueClicks / treeData.value.totalClicks) * 100).toFixed(2) + '%' : '0%'
       },
       timeSeries: {
         clicksByDate: Object.entries(clicksByDate).map(([date, count]) => ({ date, count }))

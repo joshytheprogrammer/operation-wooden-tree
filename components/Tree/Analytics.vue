@@ -27,13 +27,13 @@
         </UCard>
         
         <UCard class="text-center">
-          <div class="text-4xl font-bold text-purple-500">{{ metrics.overview.uniqueVisitors }}</div>
-          <div class="text-gray-500 dark:text-gray-400">Unique Visitors</div>
+          <div class="text-4xl font-bold text-purple-500">{{ metrics.overview.uniqueClicks }}</div>
+          <div class="text-gray-500 dark:text-gray-400">Unique Clicks</div>
         </UCard>
         
         <UCard class="text-center">
           <div class="text-4xl font-bold text-amber-500">{{ metrics.overview.conversionRate }}</div>
-          <div class="text-gray-500 dark:text-gray-400">Conversion Rate</div>
+          <div class="text-gray-500 dark:text-gray-400">Clicks Per User </div>
         </UCard>
       </div>
       
@@ -146,7 +146,7 @@
                 <th class="px-6 py-3">Link</th>
                 <th class="px-6 py-3 text-right">Clicks</th>
                 <th class="px-6 py-3 text-right">Unique Clicks</th>
-                <th class="px-6 py-3 text-right">CTR</th>
+                <th class="px-6 py-3 text-right">% of Clicks</th>
               </tr>
             </thead>
             <tbody>
@@ -155,7 +155,7 @@
                 <td class="px-6 py-4 text-right">{{ link.clicks }}</td>
                 <td class="px-6 py-4 text-right">{{ link.uniqueClicks }}</td>
                 <td class="px-6 py-4 text-right">
-                  {{ calculateCTR(link.uniqueClicks, metrics.overview.uniqueVisitors) }}
+                  {{ calculateCTR(link.uniqueClicks, metrics.overview.uniqueClicks) }}
                 </td>
               </tr>
             </tbody>

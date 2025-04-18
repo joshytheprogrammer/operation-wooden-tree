@@ -209,7 +209,7 @@ export default defineEventHandler(async (event) => {
     // Same for tree counts
     batch.update(treeRef, {
       totalClicks: FieldValue.increment(1),
-      uniqueVisitors: fingerprintData && !fingerprintData.error ? 
+      uniqueClicks: fingerprintData && !fingerprintData.error ? 
         FieldValue.increment(isUnique ? 1 : 0) : 
         FieldValue.increment(0)
     });
