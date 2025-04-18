@@ -5,7 +5,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
           <AppLogo class="h-10 w-auto" />
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Operation Wooden Tree</h1>
+          <h1 class="hidden md:text-2xl font-bold text-gray-900 dark:text-white">Operation Wooden Tree</h1>
         </div>
         <div class="flex space-x-4">
           <UButton v-if="!user" to="/a/login" variant="ghost">Sign In</UButton>
@@ -175,7 +175,7 @@
         <div class="flex flex-col md:flex-row justify-between items-center">
           <div class="flex items-center gap-3">
             <AppLogo class="h-8 w-auto" />
-            <span class="text-gray-700 dark:text-gray-300 font-medium">Operation Wooden Tree</span>
+            <span class="hidden md:block text-gray-700 dark:text-gray-300 font-medium">Operation Wooden Tree</span>
           </div>
           <div class="mt-6 md:mt-0 text-gray-500 dark:text-gray-400 text-sm">
             © {{ new Date().getFullYear() }} Operation Wooden Tree. All rights reserved.
