@@ -144,7 +144,7 @@ const handleDragEnd = async () => {
         v-for="link in links"
         :key="link.id"
         ref="linksContainer"
-        class="group relative p-4 border rounded-lg hover:shadow-md transition-all"
+        class="group relative p-4 border rounded-lg hover:shadow-md transition-all select-none"
         :class="{
           'ring-2 ring-primary-500': draggedLink?.id === link.id,
           'bg-gray-50 dark:bg-gray-800': dragOverLink?.id === link.id
