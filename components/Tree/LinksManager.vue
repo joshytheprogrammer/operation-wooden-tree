@@ -155,7 +155,7 @@ const handleDragEnd = async () => {
         @dragend="handleDragEnd"
         @dragleave="dragOverLink = null"
       >
-          <div class="flex items-start justify-between">
+          <div class="block md:flex items-start justify-between">
             <div>
               <div class="flex items-center">
                 <span class="font-medium">{{ link.title }}</span>
@@ -168,7 +168,7 @@ const handleDragEnd = async () => {
               </p>
             </div>
 
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1 pt-4 md:pt-0">
               <!-- Pinned Toggle -->
               <UTooltip :text="link.pinned ? 'Unpin link' : 'Pin to top'">
                 <UButton
@@ -209,11 +209,15 @@ const handleDragEnd = async () => {
               </UTooltip>
 
               <!-- Drag Handle -->
-              <UTooltip text="Drag to reorder">
-                <div class="handle cursor-move px-1 ">
-                  <UIcon name="i-heroicons-bars-3" class="w-4 h-4" />
-                </div>
-              </UTooltip>
+              <!-- <UTooltip text="Drag to reorder">
+                <UButton
+                  icon="i-heroicons-bars-3"
+                  color="red"
+                  variant="ghost"
+                  size="sm"
+                  square
+                  class="handle text-white cursor-move px-1 "/>
+              </UTooltip> -->
             </div>
           </div>
         </div>
