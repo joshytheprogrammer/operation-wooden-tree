@@ -49,7 +49,7 @@ const executeDelete = async () => {
     </header>
 
     <!-- Main content -->
-    <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <main class="min-h-screen mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <!-- Loading state -->
       <div v-if="loading" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <div v-for="i in 4" :key="i" class="overflow-hidden rounded-xl shadow">

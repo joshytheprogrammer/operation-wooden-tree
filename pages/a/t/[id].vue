@@ -1,5 +1,6 @@
 <script setup>
 const route = useRoute()
+const isDev = import.meta.env.DEV; 
 const treeId = route.params.id
 
 const tabs = [
@@ -81,16 +82,16 @@ const tabs = [
                 {{ item.description }}
               </p>
             </template>
-              <TreeAnalytics :tree-id="treeId" />
-            <!-- <div class="text-center py-12">
+            <TreeAnalytics v-if="isDev" :tree-id="treeId" />
+            <div v-else class="text-center py-12">
               <UIcon name="i-heroicons-chart-bar" class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
               <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-                Analytics Coming Soon
+              Analytics Coming Soon
               </h3>
               <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                We're working on bringing you detailed analytics for your tree.
+              We're working on bringing you detailed analytics for your tree.
               </p>
-            </div> -->
+            </div>
           </UCard>
         </template>
       </UTabs>

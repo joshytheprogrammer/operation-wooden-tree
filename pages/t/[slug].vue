@@ -268,15 +268,14 @@ onMounted(fetchTreeBySlug);
 
       <!-- Footer -->
       <footer class="w-full px-6 py-6 text-center text-sm opacity-60">
-        <div class="flex items-center justify-center gap-1">
+        <div class="flex items-center justify-center gap-1 bg-black mx-auto w-fit px-4 py-2">
           <span>Made with</span>
-          <UIcon name="i-heroicons-heart" class="w-4 h-4" :style="{ color: tree?.styles?.buttonBackgroundColor || '#4f46e5' }" />
+          <UIcon name="i-heroicons-heart" class="w-4 h-4" />
           <span>on</span>
           <UButton 
             to="/" 
             variant="link" 
-            class="font-medium"
-            :style="{ color: tree?.styles?.buttonBackgroundColor || '#4f46e5' }"
+            class="font-medium text-primary-100"
           >
             Operation Wooden Tree
           </UButton>
