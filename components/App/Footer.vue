@@ -4,8 +4,8 @@
    v-if="$route.name !== 't-slug'" 
   class="bg-gray-100 dark:bg-gray-800 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="flex items-center gap-3">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-3" @click.prevent="$router.push('/')">
           <AppLogo class="h-8 w-auto" />
           <span class="hidden md:block text-gray-700 dark:text-gray-300 font-medium">Operation Wooden Tree</span>
         </div>

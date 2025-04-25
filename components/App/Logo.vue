@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center">
+  <div class="flex items-center justify-center w-fit">
     <img 
       src="/assets/logo.png" 
       alt="Admin Portal Logo" 
